@@ -9,22 +9,18 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.purpleAccent,
         ),
-        body: const Center(
+        body: Center(
           child: CustomBarChart(
-            barValue: [1.2, 2, 3, 4, 5, 4, 7, 8, 9, 15],
+            bars: [
+              BarChartModel(1500, 'Sat'),
+              BarChartModel(2515, 'Sun'),
+              BarChartModel(2021, 'Mon'),
+              BarChartModel(1659, 'Tue'),
+              BarChartModel(1892, 'Wed'),
+              BarChartModel(2134, 'Thu'),
+              BarChartModel(2354, 'Fri'),
+            ],
           ),
-          // IconButton(
-          //   onPressed: () {
-          //     Navigator.of(context).pushNamed(
-          //       '/CustomBarChart',
-          //     );
-          //   },
-          //   icon: const Icon(
-          //     CupertinoIcons.chart_bar_alt_fill,
-          //     size: 100,
-          //     color: Colors.red,
-          //   ),
-          // ),
         ),
       );
 }

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 class CustomBarChart<T> extends StatelessWidget {
   const CustomBarChart({
     Key? key,
-    required this.barValue,
-    this.chartWidth,
-    this.chartHeight,
+    required this.bars,
+    this.width,
+    this.height,
     this.barColor,
     this.barWidth,
     this.barBorderRadius,
@@ -20,27 +20,39 @@ class CustomBarChart<T> extends StatelessWidget {
     this.showTopTitles,
     this.bottomAxisWidget,
     this.model,
+    this.distanceFromSide,
+    this.backGroundColor,
+    this.showGrid,
+    this.topAxisWidget,
+    this.leftAxisWidget,
+    this.rightAxisWidget,
   }) : super(key: key);
 
-  final List<double> barValue;
-  final double? chartWidth;
-  final double? chartHeight;
+  final List<BarChartModel> bars;
+  final double? width;
+  final double? height;
   final double? barBorderRadius;
   final double? barWidth;
   final Color? barColor;
+  final Color? backGroundColor;
   final Gradient? gradient;
   final double? titleAngel;
   final bool? showTopTitles;
   final bool? showRightTitles;
   final bool? showLeftTitles;
   final bool? showBottomTitles;
+  final bool? showGrid;
   final Widget? bottomAxisWidget;
+  final Widget? topAxisWidget;
+  final Widget? leftAxisWidget;
+  final Widget? rightAxisWidget;
   final List<T>? model;
+  final double? distanceFromSide;
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: chartWidth ?? barValue.length * 50,
-        height: chartHeight ?? barValue.length * 50,
+        width: width ?? bars.length * 50,
+        height: height ?? bars.length * 50,
         child: Center(
           child: BarChart(_barChartData()),
         ),
@@ -48,36 +60,41 @@ class CustomBarChart<T> extends StatelessWidget {
 
   BarChartData _barChartData() {
     return BarChartData(
-      barGroups: [
-        ..._barsGenerator(barValue),
-      ],
+      gridData: FlGridData(show: showGrid ?? true),
+      backgroundColor: backGroundColor,
+      barGroups: _barsGenerator(bars),
       titlesData: FlTitlesData(
         show: true,
         rightTitles: AxisTitles(
+          axisNameWidget: rightAxisWidget,
           sideTitles: SideTitles(
+            reservedSize: distanceFromSide ?? 60,
             showTitles: showRightTitles ?? false,
           ),
         ),
         topTitles: AxisTitles(
+          axisNameWidget: topAxisWidget,
           sideTitles: SideTitles(
+            reservedSize: distanceFromSide ?? 60,
             showTitles: showTopTitles ?? false,
           ),
         ),
         leftTitles: AxisTitles(
+          axisNameWidget: leftAxisWidget,
           sideTitles: SideTitles(
-            reservedSize: 60,
+            reservedSize: distanceFromSide ?? 60,
             showTitles: showLeftTitles ?? true,
           ),
         ),
         bottomTitles: AxisTitles(
           axisNameWidget: bottomAxisWidget,
           sideTitles: SideTitles(
-            reservedSize: 60,
+            reservedSize: distanceFromSide ?? 60,
             showTitles: showBottomTitles ?? true,
             getTitlesWidget: (value, meta) => SideTitleWidget(
               angle: titleAngel ?? 0.0,
               axisSide: meta.axisSide,
-              child: Text(value.toString()),
+              child: Text(bars[value.toInt()].title),
             ),
           ),
         ),
@@ -85,7 +102,7 @@ class CustomBarChart<T> extends StatelessWidget {
     );
   }
 
-  List<BarChartGroupData> _barsGenerator(List<double> value) => value
+  List<BarChartGroupData> _barsGenerator(List<BarChartModel> value) => value
       .map(
         (element) => BarChartGroupData(
           x: value.indexOf(element),
@@ -93,7 +110,7 @@ class CustomBarChart<T> extends StatelessWidget {
             BarChartRodData(
               gradient: gradient,
               width: barWidth,
-              toY: element,
+              toY: element.value,
               borderRadius:
                   BorderRadius.all(Radius.circular(barBorderRadius ?? 8)),
               color: barColor ??
@@ -105,9 +122,9 @@ class CustomBarChart<T> extends StatelessWidget {
       .toList();
 }
 
-class _BarChartModel {
+class BarChartModel {
   final double value;
   final String title;
 
-  _BarChartModel(this.value, this.title);
+  BarChartModel(this.value, this.title);
 }
