@@ -9,10 +9,9 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Colors.purpleAccent,
         ),
-        body: Center(
+        body: const Center(
           child: CustomBarChart(
-            width: 250,
-            height: 250,
+            barValue: [1.2, 2, 3, 4, 5, 4, 7, 8, 9, 15],
           ),
           // IconButton(
           //   onPressed: () {

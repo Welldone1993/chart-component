@@ -1,4 +1,3 @@
-import 'package:chart_component/bar_chart.dart';
 import 'package:flutter/material.dart';
 
 import 'home_page.dart';
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
         ),
         routes: {
           '/': (context) => const HomePage(),
-          '/CustomBarChart': (context) => const CustomBarChart(),
+          // '/CustomBarChart': (context) => const CustomBarChart(),
         },
         initialRoute: '/',
       );
