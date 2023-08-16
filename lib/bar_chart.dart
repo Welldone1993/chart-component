@@ -9,7 +9,7 @@ class CustomBarChart<T> extends StatelessWidget {
     required this.bars,
     this.width,
     this.height,
-    this.barColor,
+    this.allBarsColor,
     this.barWidth,
     this.barBorderRadius,
     this.gradient,
@@ -33,7 +33,7 @@ class CustomBarChart<T> extends StatelessWidget {
   final double? height;
   final double? barBorderRadius;
   final double? barWidth;
-  final Color? barColor;
+  final Color? allBarsColor;
   final Color? backGroundColor;
   final Gradient? gradient;
   final double? titleAngel;
@@ -113,7 +113,8 @@ class CustomBarChart<T> extends StatelessWidget {
               toY: element.value,
               borderRadius:
                   BorderRadius.all(Radius.circular(barBorderRadius ?? 8)),
-              color: barColor ??
+              color: element.color ??
+                  allBarsColor ??
                   Colors.primaries[Random().nextInt(Colors.primaries.length)],
             ),
           ],
@@ -125,6 +126,7 @@ class CustomBarChart<T> extends StatelessWidget {
 class BarChartModel {
   final double value;
   final String title;
+  final Color? color;
 
-  BarChartModel(this.value, this.title);
+  BarChartModel({required this.value, required this.title, this.color});
 }

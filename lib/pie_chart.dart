@@ -13,7 +13,7 @@ class CustomPieChart extends StatefulWidget {
     this.radius,
     this.diameter,
     this.largeSectionThickness,
-    this.smallSectionThickness,
+    this.defaultSectionThickness,
     this.titleByPercent = false,
     this.hasMotion = false,
   });
@@ -28,7 +28,7 @@ class CustomPieChart extends StatefulWidget {
   final double? spaceBetween;
   final double? radius;
   final double? largeSectionThickness;
-  final double? smallSectionThickness;
+  final double? defaultSectionThickness;
   final double? diameter;
 
   @override
@@ -36,7 +36,7 @@ class CustomPieChart extends StatefulWidget {
 }
 
 class _CustomPieChartState extends State<CustomPieChart> {
-  int touchedIndex = 0;
+  int touchedIndex = -1;
 
   @override
   Widget build(BuildContext context) => SizedBox(
@@ -65,7 +65,7 @@ class _CustomPieChartState extends State<CustomPieChart> {
             ),
             startDegreeOffset: widget.angel,
             sectionsSpace: widget.spaceBetween ?? 0,
-            centerSpaceRadius: widget.radius ?? 100,
+            centerSpaceRadius: widget.radius ?? 0,
             sections: _section(widget.section),
             centerSpaceColor: widget.centerColor,
           ),
@@ -81,7 +81,7 @@ class _CustomPieChartState extends State<CustomPieChart> {
           (section) => PieChartSectionData(
               radius: (_isTouched(sectionsList.indexOf(section)))
                   ? widget.largeSectionThickness ?? 40
-                  : widget.smallSectionThickness ?? 30,
+                  : widget.defaultSectionThickness ?? 30,
               color: section.color,
               title: widget.titleByPercent
                   ? _averageByPercent(section, overAllValues)
@@ -111,9 +111,13 @@ class _CustomPieChartState extends State<CustomPieChart> {
 }
 
 class PieChartSectionModel {
-  final String title;
-  final Color color;
   final double value;
+  final String title;
+  final Color? color;
 
-  PieChartSectionModel(this.title, this.color, this.value);
+  PieChartSectionModel({
+    required this.value,
+    required this.title,
+    this.color,
+  });
 }

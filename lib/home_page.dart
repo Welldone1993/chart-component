@@ -16,29 +16,41 @@ class HomePage extends StatelessWidget {
               Expanded(
                 child: CustomPieChart(
                   hasMotion: true,
-                  largeSectionThickness: 100,
-                  smallSectionThickness: 50,
+                  largeSectionThickness: 180,
+                  defaultSectionThickness: 150,
                   titleByPercent: true,
                   section: [
-                    PieChartSectionModel('title', Colors.red, 10),
-                    PieChartSectionModel('title2', Colors.green, 7),
-                    PieChartSectionModel('title2', Colors.blue, 9),
-                    PieChartSectionModel('title2', Colors.purple, 3),
-                    PieChartSectionModel('title3', Colors.cyanAccent, 4),
-                    PieChartSectionModel('title3', Colors.amber, 0.5),
+                    PieChartSectionModel(
+                        title: 'title', color: Colors.red, value: 10),
+                    PieChartSectionModel(
+                        title: 'title2', color: Colors.green, value: 7),
+                    PieChartSectionModel(
+                        title: 'title2', color: Colors.blue, value: 9),
+                    PieChartSectionModel(
+                        title: 'title2', color: Colors.purple, value: 3),
+                    PieChartSectionModel(
+                        title: 'title3', color: Colors.cyanAccent, value: 4),
+                    PieChartSectionModel(
+                        title: 'title3', color: Colors.amber, value: 0.5),
                   ],
                 ),
               ),
               Expanded(
                 child: CustomBarChart(
                   bars: [
-                    BarChartModel(1500, 'Sat'),
-                    BarChartModel(2515, 'Sun'),
-                    BarChartModel(2021, 'Mon'),
-                    BarChartModel(1659, 'Tue'),
-                    BarChartModel(1892, 'Wed'),
-                    BarChartModel(2134, 'Thu'),
-                    BarChartModel(2354, 'Fri'),
+                    BarChartModel(
+                        value: 1500, title: 'Sat', color: Colors.black),
+                    BarChartModel(
+                        value: 2515, title: 'Sun', color: Colors.blue),
+                    BarChartModel(
+                        value: 2021, title: 'Mon', color: Colors.cyanAccent),
+                    BarChartModel(
+                        value: 1659, title: 'Tue', color: Colors.pink),
+                    BarChartModel(
+                        value: 1892, title: 'Wed', color: Colors.green),
+                    BarChartModel(
+                        value: 2134, title: 'Thu', color: Colors.yellow),
+                    BarChartModel(value: 2354, title: 'Fri', color: Colors.red),
                   ],
                 ),
               ),
