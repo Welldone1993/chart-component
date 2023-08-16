@@ -11,19 +11,25 @@ class CustomPieChart extends StatefulWidget {
     this.angel,
     this.spaceBetween,
     this.radius,
-    this.height,
+    this.diameter,
+    this.largeSectionThickness,
+    this.smallSectionThickness,
     this.titleByPercent = false,
+    this.hasMotion = false,
   });
 
   final List<PieChartSectionModel> section;
   final bool? showTitle;
   final bool titleByPercent;
+  final bool hasMotion;
   final TextStyle? titleStyle;
   final Color? centerColor;
   final double? angel;
   final double? spaceBetween;
   final double? radius;
-  final double? height;
+  final double? largeSectionThickness;
+  final double? smallSectionThickness;
+  final double? diameter;
 
   @override
   State<CustomPieChart> createState() => _CustomPieChartState();
@@ -34,23 +40,27 @@ class _CustomPieChartState extends State<CustomPieChart> {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: widget.height,
-        height: widget.height,
+        width: widget.diameter,
+        height: widget.diameter,
         child: PieChart(
           PieChartData(
             pieTouchData: PieTouchData(
               enabled: true,
               touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                setState(() {
-                  if (!event.isInterestedForInteractions ||
-                      pieTouchResponse == null ||
-                      pieTouchResponse.touchedSection == null) {
-                    touchedIndex = -1;
-                    return;
-                  }
-                  touchedIndex =
-                      pieTouchResponse.touchedSection!.touchedSectionIndex;
-                });
+                if (widget.hasMotion) {
+                  setState(
+                    () {
+                      if (!event.isInterestedForInteractions ||
+                          pieTouchResponse == null ||
+                          pieTouchResponse.touchedSection == null) {
+                        touchedIndex = -1;
+                        return;
+                      }
+                      touchedIndex =
+                          pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    },
+                  );
+                }
               },
             ),
             startDegreeOffset: widget.angel,
@@ -62,22 +72,27 @@ class _CustomPieChartState extends State<CustomPieChart> {
         ),
       );
 
-  List<PieChartSectionData> _section(List<PieChartSectionModel> sections) {
-    final overAllValues = sections.fold(
+  List<PieChartSectionData> _section(List<PieChartSectionModel> sectionsList) {
+    final overAllValues = sectionsList.fold(
         0.0, (previousValue, element) => previousValue + element.value);
 
-    return sections
+    return sectionsList
         .map(
           (section) => PieChartSectionData(
-            radius: (_isTouched(2)) ? 25 : 50,
-            color: section.color,
-            title: widget.titleByPercent
-                ? _averageByPercent(section, overAllValues)
-                : section.title,
-            value: section.value,
-            showTitle: widget.showTitle ?? true,
-            titleStyle: widget.titleStyle,
-          ),
+              radius: (_isTouched(sectionsList.indexOf(section)))
+                  ? widget.largeSectionThickness ?? 40
+                  : widget.smallSectionThickness ?? 30,
+              color: section.color,
+              title: widget.titleByPercent
+                  ? _averageByPercent(section, overAllValues)
+                  : section.title,
+              value: section.value,
+              showTitle: widget.showTitle ?? true,
+              titleStyle: widget.titleStyle ??
+                  TextStyle(
+                      fontSize: (_isTouched(sectionsList.indexOf(section)))
+                          ? 30
+                          : 10)),
         )
         .toList();
   }
