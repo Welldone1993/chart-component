@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class CustomPieChart extends StatefulWidget {
   const CustomPieChart({
-    super.key,
     required this.section,
+    super.key,
     this.showTitle,
     this.titleStyle,
     this.centerColor,
@@ -46,22 +46,7 @@ class _CustomPieChartState extends State<CustomPieChart> {
           PieChartData(
             pieTouchData: PieTouchData(
               enabled: true,
-              touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                if (widget.hasMotion) {
-                  setState(
-                    () {
-                      if (!event.isInterestedForInteractions ||
-                          pieTouchResponse == null ||
-                          pieTouchResponse.touchedSection == null) {
-                        touchedIndex = -1;
-                        return;
-                      }
-                      touchedIndex =
-                          pieTouchResponse.touchedSection!.touchedSectionIndex;
-                    },
-                  );
-                }
-              },
+              touchCallback: _touchResponse,
             ),
             startDegreeOffset: widget.angel,
             sectionsSpace: widget.spaceBetween ?? 0,
@@ -72,52 +57,68 @@ class _CustomPieChartState extends State<CustomPieChart> {
         ),
       );
 
+  void _touchResponse(FlTouchEvent event, PieTouchResponse? pieTouchResponse) {
+    if (widget.hasMotion) {
+      setState(
+        () {
+          if (!event.isInterestedForInteractions ||
+              pieTouchResponse == null ||
+              pieTouchResponse.touchedSection == null) {
+            touchedIndex = -1;
+
+            return;
+          }
+          touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
+        },
+      );
+    }
+  }
+
   List<PieChartSectionData> _section(List<PieChartSectionModel> sectionsList) {
     final overAllValues = sectionsList.fold(
-        0.0, (previousValue, element) => previousValue + element.value);
+      0.0,
+      (previousValue, element) => previousValue + element.value,
+    );
 
     return sectionsList
         .map(
           (section) => PieChartSectionData(
-              radius: (_isTouched(sectionsList.indexOf(section)))
-                  ? widget.largeSectionThickness ?? 40
-                  : widget.defaultSectionThickness ?? 30,
-              color: section.color,
-              title: widget.titleByPercent
-                  ? _averageByPercent(section, overAllValues)
-                  : section.title,
-              value: section.value,
-              showTitle: widget.showTitle ?? true,
-              titleStyle: widget.titleStyle ??
-                  TextStyle(
-                      fontSize: (_isTouched(sectionsList.indexOf(section)))
-                          ? 30
-                          : 10)),
+            radius: (_isTouched(sectionsList.indexOf(section)))
+                ? widget.largeSectionThickness ?? 40
+                : widget.defaultSectionThickness ?? 30,
+            color: section.color,
+            title: widget.titleByPercent
+                ? _averageByPercent(section, overAllValues)
+                : section.title,
+            value: section.value,
+            showTitle: widget.showTitle ?? true,
+            titleStyle: widget.titleStyle ??
+                TextStyle(
+                  fontSize:
+                      (_isTouched(sectionsList.indexOf(section))) ? 30 : 10,
+                ),
+          ),
         )
         .toList();
   }
 
   String _averageByPercent(
-          PieChartSectionModel section, double overAllValues) =>
+    PieChartSectionModel section,
+    double overAllValues,
+  ) =>
       '${((section.value / overAllValues) * 100).toStringAsFixed(2)}%';
 
-  bool _isTouched(int index) {
-    if (touchedIndex == index) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+  bool _isTouched(int index) => touchedIndex == index;
 }
 
 class PieChartSectionModel {
   final double value;
-  final String title;
+  final String? title;
   final Color? color;
 
   PieChartSectionModel({
     required this.value,
-    required this.title,
+    this.title,
     this.color,
   });
 }
